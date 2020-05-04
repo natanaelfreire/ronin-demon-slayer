@@ -3,6 +3,7 @@ import * as THREE from '../node_modules/three/build/three.module.js';
 var camera, scene, renderer;
 var geometry, material, mesh;
 var loader;
+var edges, line;
 
 init();
 animate();
@@ -39,12 +40,17 @@ function init() {
 
 			scene.add( mesh );
 
+			edges = new THREE.EdgesGeometry( geometry );
+			line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+			scene.add( line );
+
 		},
 		function ( err ) {
 		console.log( 'An error happened' );
-	}
-);
-	
+		}
+	);
+
+
 
 }
 
