@@ -29,10 +29,10 @@ function init() {
 				height: 5,
 				curveSegments: 12,
 				bevelEnabled: false,
-			/*	bevelThickness: 10,
+				bevelThickness: 10,
 				bevelSize: 8,
 				bevelOffset: 0,
-				bevelSegments: 5 Not necessary in this case */ 
+				bevelSegments: 5 
 			});
 
 			material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );

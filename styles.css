@@ -5,3 +5,21 @@
 	width: 100%;
 	text-align: center;
 }
+
+.credits {
+	color: white;
+	font-size: 20px;
+	position: absolute;
+	top: 90%;
+	width: 100%;
+	text-align: right;
+	right: 5vw;
+}
+
+.credits a {
+	color: #003bc1;
+	text-decoration: none;
+	background-color: #d3d3d3;
+	padding: 2px;
+	border-radius: 2px;
+}
