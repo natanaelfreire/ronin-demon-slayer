@@ -50,8 +50,6 @@ function init() {
 		}
 	);
 
-
-
 }
 
 function animate() {
