@@ -27,7 +27,7 @@ function init() {
 
 	controls = new OrbitControls( camera, renderer.domElement );
 
-	ambientLight = new THREE.AmbientLight( 0xffffff );
+	ambientLight = new THREE.AmbientLight( 0xcccccc );
 	scene.add( ambientLight );
 
 	directionalLight = new THREE.DirectionalLight( 0xffffff );
