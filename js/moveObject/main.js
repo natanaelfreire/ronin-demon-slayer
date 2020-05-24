@@ -7,6 +7,8 @@ var loader;
 var ambientLight, light;
 var controls;
 var mixer, actions, clock;
+var collidableMeshList = [];
+var model, maze;
 
 init();
 
@@ -15,7 +17,7 @@ function init() {
 	scene = new THREE.Scene();
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 5000 );
-	camera.position.set( 0, 25, 10 );
+	camera.position.set( 0, 20, 10 );
 	camera.lookAt( 0, 0, 0 );
 
 	clock = new THREE.Clock();
@@ -37,21 +39,26 @@ function init() {
 	loader = new GLTFLoader();
 	loader.load('../../models/test/test.gltf', function ( gltf ) {
 
-		//console.log( gltf.scene );
-		scene.add( gltf.scene );
+		maze = gltf.scene;
 
-		let monsterLoader = new GLTFLoader();
+		collidableMeshList.push(maze);
+		
+		scene.add( maze );
+
+		var monsterLoader = new GLTFLoader();
 		monsterLoader.load('../../animations/littlemonster/scene.gltf', function ( gltf ) {
 
-			let model = gltf.scene;
+			model = gltf.scene;
 			model.scale.set( 0.02, 0.02, 0.02 );
 			model.position.x = 7.2;
 			model.position.y = 0;
 			model.position.z = 7;
 			model.rotation.y = 3.2;
+			
+			console.log( model );
 			scene.add( model );
 
-			let animations = gltf.animations;
+			var animations = gltf.animations;
 
 			mixer = new THREE.AnimationMixer( model );
 			actions = mixer.clipAction( animations[0] );
@@ -59,7 +66,7 @@ function init() {
 
 			document.addEventListener("keydown", ( event ) => {
 
-				let keyPressed = event.key;
+				var keyPressed = event.key;
 
 				if (keyPressed == 'ArrowUp') {
 					model.position.z -= 0.2;
@@ -90,9 +97,22 @@ function animate() {
 	requestAnimationFrame( animate );
 
 	var mixerUpdateDelta = clock.getDelta();
-
 	mixer.update( mixerUpdateDelta );
 
 	renderer.render( scene, camera );
+	//update();
+
+}
+
+function update() {
+
+	var originPoint = model.position.clone();
+
+	var globalVertex = model.matrix;
+	//var directionVector = globalVertex.sub( model.position );
+
+	var ray = new THREE.Raycaster( originPoint );
+	var collisionResults = ray.intersectObject( collidableMeshList );
+	console.log( collisionResults );
 
 }
