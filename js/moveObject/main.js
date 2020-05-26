@@ -3,15 +3,16 @@ import { GLTFLoader } from '../../node_modules/three/examples/jsm/loaders/GLTFLo
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import fieldWireFrame from './fieldWireFrame.js';
 import THREEx from './THREEx.KeyboardState.js';
+import modelWireFrame from './modelWireFrame.js';
 
 var scene, camera, renderer;
 var loader;
 var ambientLight, light;
 var controls;
 var mixer, actions, clock;
-var collidableMeshList = [];
+var collidableMeshList = fieldWireFrame();
 var keyboard = new THREEx.KeyboardState();
-var model;
+var model, modelWire = modelWireFrame();
 
 init();
 animate();
@@ -40,11 +41,11 @@ function init() {
 	light.position.set( 0, 5, 5 );
 	scene.add( light );
 
-	for (var i = fieldWireFrame.length - 1; i >= 0; i--) {
-		scene.add(fieldWireFrame[i]);
+	for (var i = collidableMeshList.length - 1; i >= 0; i--) {
+		scene.add(collidableMeshList[i]);
 	}
 
-	collidableMeshList = [...fieldWireFrame];
+	scene.add(modelWire);
 	
 	loader = new GLTFLoader();
 	loader.load('../../models/field/field.gltf', function ( gltf ) {
@@ -95,15 +96,19 @@ function update() {
 
 	if (keyboard.pressed("left")) {
 		model.position.x -= 0.05;
+		modelWire.position.x -= 0.05;
 	}
 	if (keyboard.pressed("right")) {
 		model.position.x += 0.05;
+		modelWire.position.x += 0.05;
 	}
 	if (keyboard.pressed("up")) {
 		model.position.z -= 0.05;
+		modelWire.position.z -= 0.05;
 	}
 	if (keyboard.pressed("down")) {
 		model.position.z += 0.05;
+		modelWire.position.z += 0.05;
 	}
 
 	rotation();
@@ -133,5 +138,5 @@ function rotation() {
 	} else if (keyboard.pressed("down")) {
 		model.rotation.y = 0;
 	}
-	
+
 }
