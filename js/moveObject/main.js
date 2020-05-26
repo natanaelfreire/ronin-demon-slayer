@@ -1,6 +1,7 @@
 import * as THREE from '../../node_modules/three/build/three.module.js';
 import { GLTFLoader } from '../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import fieldWireFrame from './fieldWireFrame.js';
 
 var scene, camera, renderer;
 var loader;
@@ -11,6 +12,7 @@ var collidableMeshList = [];
 var model, maze;
 
 init();
+animate();
 
 function init() {
 
@@ -36,8 +38,12 @@ function init() {
 	light.position.set( 0, 5, 5 );
 	scene.add( light );
 
+	for (var i = fieldWireFrame.length - 1; i >= 0; i--) {
+		scene.add(fieldWireFrame[i]);
+	}
+	
 	loader = new GLTFLoader();
-	loader.load('../../models/test/test.gltf', function ( gltf ) {
+	loader.load('../../models/field/field.gltf', function ( gltf ) {
 
 		maze = gltf.scene;
 
@@ -50,12 +56,12 @@ function init() {
 
 			model = gltf.scene;
 			model.scale.set( 0.02, 0.02, 0.02 );
-			model.position.x = 7.2;
+			model.position.x = 9.5;
 			model.position.y = 0;
-			model.position.z = 7;
+			model.position.z = 11;
 			model.rotation.y = 3.2;
 			
-			console.log( model );
+			//console.log( model );
 			scene.add( model );
 
 			var animations = gltf.animations;
@@ -84,8 +90,6 @@ function init() {
 
 			});
 
-			animate();
-
 		});
 
 	});
@@ -97,7 +101,8 @@ function animate() {
 	requestAnimationFrame( animate );
 
 	var mixerUpdateDelta = clock.getDelta();
-	mixer.update( mixerUpdateDelta );
+	if(mixer != undefined)
+		mixer.update( mixerUpdateDelta );
 
 	renderer.render( scene, camera );
 	//update();
