@@ -6,7 +6,7 @@ export default function fieldWireFrame() {
 
 	// EXTERNAL WALLS:
 	var wallGeometry = new BoxGeometry(28, 2, 1.2, 15);
-	var wireMaterial = new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: false, opacity: 0 });
+	var wireMaterial = new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 0 });
 	var wall = new Mesh(wallGeometry, wireMaterial);
 	wall.position.set(0, 1, 13);
 	field.push(wall);

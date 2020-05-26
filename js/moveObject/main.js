@@ -22,8 +22,8 @@ function init() {
 	scene = new THREE.Scene();
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 5000 );
-	camera.position.set( 0, 20, 10 );
-	camera.lookAt( 0, 0, 0 );
+	camera.position.set( 9.5, 5, 15 );
+	camera.lookAt( 9.5, 0.8, 10 );
 
 	clock = new THREE.Clock();
 
@@ -58,11 +58,8 @@ function init() {
 
 			model = gltf.scene;
 			model.scale.set( 0.02, 0.02, 0.02 );
-			model.position.x = 9.5;
-			model.position.y = 0;
-			model.position.z = 11;
+			model.position.set(9.5, 0, 10);
 			model.rotation.y = 3.2;
-			
 			scene.add( model );
 
 			var animations = gltf.animations;
@@ -84,7 +81,7 @@ function animate() {
 	if(mixer != undefined){
 		mixer.update( mixerUpdateDelta );
 		actions.play();
-		//camera.lookAt(model.position);
+		camera.lookAt(model.position);
 	}
 
 	renderer.render( scene, camera );
@@ -94,28 +91,88 @@ function animate() {
 
 function update() {
 
+	var originPoint = modelWire.position.clone();
+
 	if (keyboard.pressed("left")) {
 		model.position.x -= 0.05;
 		modelWire.position.x -= 0.05;
+		camera.position.x -= 0.05;
 	}
 	if (keyboard.pressed("right")) {
 		model.position.x += 0.05;
 		modelWire.position.x += 0.05;
+		camera.position.x += 0.05;
 	}
 	if (keyboard.pressed("up")) {
 		model.position.z -= 0.05;
 		modelWire.position.z -= 0.05;
+		camera.position.z -= 0.05;
 	}
 	if (keyboard.pressed("down")) {
 		model.position.z += 0.05;
 		modelWire.position.z += 0.05;
+		camera.position.z += 0.05;
 	}
 
-	rotation();
+	rotate();
+
+	for (var vertexIndex = 0; vertexIndex < modelWire.geometry.vertices.length; vertexIndex++) {
+
+		var localVertex = modelWire.geometry.vertices[vertexIndex].clone();
+		var ray = new THREE.Raycaster( originPoint, localVertex.clone().normalize() );
+		var collisionResults = ray.intersectObjects( collidableMeshList );
+		//console.log(collisionResults)
+		if ( collisionResults.length > 0 && collisionResults[0].distance < localVertex.length() ) {
+			console.log(" Hit ");
+			var key = {};
+			var [ value1, value2, value3, value4 ] = Object.values(keyboard.keyCodes);
+			var [ key1, key2, key3, key4 ] = Object.keys(keyboard.keyCodes);
+			key[key1] = value1;
+			key[key2] = value2;
+			key[key3] = value3;
+			key[key4] = value4;
+
+			console.table(key)
+
+			if (keyboard.pressed("left")) {
+				model.position.x += 0.10;
+				modelWire.position.x += 0.10;
+			} else if (key["37"] == false) {
+				model.position.x += 0.05;
+				modelWire.position.x += 0.05;
+			}
+
+			if (keyboard.pressed("right")) {
+				model.position.x -= 0.10;
+				modelWire.position.x -= 0.10;
+			} else if (key["39"] == false) {
+				model.position.x -= 0.05;
+				modelWire.position.x -= 0.05;
+			}
+
+			if (keyboard.pressed("up")) {
+				model.position.z += 0.10;
+				modelWire.position.z += 0.10;
+			} else if (key["38"] == false) {
+				model.position.z += 0.05;
+				modelWire.position.z += 0.05;
+			}
+
+			if (keyboard.pressed("down")) {
+				model.position.z -= 0.10;
+				modelWire.position.z -= 0.10;
+			} else if (key["40"] == false) {
+				model.position.z -= 0.05;
+				modelWire.position.z -= 0.05;
+			}
+
+			keyboard.keyCodes = {};
+		}
+	}
 
 }
 
-function rotation() {
+function rotate() {
 
 	if (keyboard.pressed("left")) {
 		if (keyboard.pressed("up")) {
