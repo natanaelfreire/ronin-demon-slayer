@@ -40,14 +40,21 @@ var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(-8.3, 1, -2.5);
 fieldWireFrame.push(wall);
 
-var wallGeometry = new THREE.BoxGeometry(1.2, 2, 6.2, 1, 5, 15);
+var wallGeometry = new THREE.BoxGeometry(1.2, 2, 6.2, 1, 5, 15); // THIS IS EQUAL TO THE NEXT WALLS
 var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(-1.7, 1, -2.5);
 fieldWireFrame.push(wall);
 
-var wallGeometry = new THREE.BoxGeometry(1.2, 2, 6.2, 1, 5, 15);
 var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(-1.7, 1, -12.2);
+fieldWireFrame.push(wall);
+
+var wall = new THREE.Mesh(wallGeometry, wireMaterial);
+wall.position.set(7, 1, 10.5);
+fieldWireFrame.push(wall);
+
+var wall = new THREE.Mesh(wallGeometry, wireMaterial);
+wall.position.set(12, 1, 10.5);
 fieldWireFrame.push(wall);
 
 var wallGeometry = new THREE.BoxGeometry(1.2, 2, 4.5, 1, 5, 15);
@@ -55,22 +62,11 @@ var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(-1.7, 1, 6.3);
 fieldWireFrame.push(wall);
 
-var wallGeometry = new THREE.BoxGeometry(1.2, 2, 6.2, 1, 5, 15);
-var wall = new THREE.Mesh(wallGeometry, wireMaterial);
-wall.position.set(7, 1, 10.5);
-fieldWireFrame.push(wall);
-
-var wallGeometry = new THREE.BoxGeometry(1.2, 2, 6.2, 1, 5, 15);
-var wall = new THREE.Mesh(wallGeometry, wireMaterial);
-wall.position.set(12, 1, 10.5);
-fieldWireFrame.push(wall);
-
-var wallGeometry = new THREE.BoxGeometry(6.2, 2, 1.2, 1, 5, 1);
+var wallGeometry = new THREE.BoxGeometry(6.2, 2, 1.2, 1, 5, 1); // THIS IS EQUAL TO THE NEXT WALL
 var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(5.5, 1, -8.5);
 fieldWireFrame.push(wall);
 
-var wallGeometry = new THREE.BoxGeometry(6.2, 2, 1.2, 1, 5, 1);
 var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(5.5, 1, -4);
 fieldWireFrame.push(wall);
@@ -80,12 +76,11 @@ var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(5, 1, 8);
 fieldWireFrame.push(wall);
 
-var wallGeometry = new THREE.BoxGeometry(7.8, 2, 1.2, 1, 5, 1);
+var wallGeometry = new THREE.BoxGeometry(7.8, 2, 1.2, 1, 5, 1); // THIS IS EQUAL TO THE NEXT WALL
 var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(-5, 1, -5);
 fieldWireFrame.push(wall);
 
-var wallGeometry = new THREE.BoxGeometry(7.8, 2, 1.2, 1, 5, 1);
 var wall = new THREE.Mesh(wallGeometry, wireMaterial);
 wall.position.set(-5, 1, 8);
 fieldWireFrame.push(wall);

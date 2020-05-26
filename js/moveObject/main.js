@@ -2,6 +2,7 @@ import * as THREE from '../../node_modules/three/build/three.module.js';
 import { GLTFLoader } from '../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import fieldWireFrame from './fieldWireFrame.js';
+import THREEx from './THREEx.KeyboardState.js';
 
 var scene, camera, renderer;
 var loader;
@@ -9,7 +10,8 @@ var ambientLight, light;
 var controls;
 var mixer, actions, clock;
 var collidableMeshList = [];
-var model, maze;
+var keyboard = new THREEx.KeyboardState();
+var model;
 
 init();
 animate();
@@ -41,15 +43,14 @@ function init() {
 	for (var i = fieldWireFrame.length - 1; i >= 0; i--) {
 		scene.add(fieldWireFrame[i]);
 	}
+
+	collidableMeshList = [...fieldWireFrame];
 	
 	loader = new GLTFLoader();
 	loader.load('../../models/field/field.gltf', function ( gltf ) {
 
-		maze = gltf.scene;
-
-		collidableMeshList.push(maze);
-		
-		scene.add( maze );
+		var field = gltf.scene;		
+		scene.add( field );
 
 		var monsterLoader = new GLTFLoader();
 		monsterLoader.load('../../animations/littlemonster/scene.gltf', function ( gltf ) {
@@ -61,34 +62,12 @@ function init() {
 			model.position.z = 11;
 			model.rotation.y = 3.2;
 			
-			//console.log( model );
 			scene.add( model );
 
 			var animations = gltf.animations;
 
 			mixer = new THREE.AnimationMixer( model );
 			actions = mixer.clipAction( animations[0] );
-			actions.play();
-
-			document.addEventListener("keydown", ( event ) => {
-
-				var keyPressed = event.key;
-
-				if (keyPressed == 'ArrowUp') {
-					model.position.z -= 0.2;
-					model.rotation.y = 3.2;
-				} else if (keyPressed == 'ArrowDown') {
-					model.position.z += 0.2;
-					model.rotation.y = 0;
-				} else if (keyPressed == 'ArrowLeft') {
-					model.position.x -= 0.2;
-					model.rotation.y = 4.8;
-				} else if (keyPressed == 'ArrowRight') {
-					model.position.x += 0.2;
-					model.rotation.y = 1.6;
-				}		
-
-			});
 
 		});
 
@@ -101,23 +80,58 @@ function animate() {
 	requestAnimationFrame( animate );
 
 	var mixerUpdateDelta = clock.getDelta();
-	if(mixer != undefined)
+	if(mixer != undefined){
 		mixer.update( mixerUpdateDelta );
+		actions.play();
+		//camera.lookAt(model.position);
+	}
 
 	renderer.render( scene, camera );
-	//update();
+	update();
 
 }
 
 function update() {
 
-	var originPoint = model.position.clone();
+	if (keyboard.pressed("left")) {
+		model.position.x -= 0.05;
+	}
+	if (keyboard.pressed("right")) {
+		model.position.x += 0.05;
+	}
+	if (keyboard.pressed("up")) {
+		model.position.z -= 0.05;
+	}
+	if (keyboard.pressed("down")) {
+		model.position.z += 0.05;
+	}
 
-	var globalVertex = model.matrix;
-	//var directionVector = globalVertex.sub( model.position );
+	rotation();
 
-	var ray = new THREE.Raycaster( originPoint );
-	var collisionResults = ray.intersectObject( collidableMeshList );
-	console.log( collisionResults );
+}
 
+function rotation() {
+
+	if (keyboard.pressed("left")) {
+		if (keyboard.pressed("up")) {
+			model.rotation.y = 4;
+		} else if (keyboard.pressed("down")) {
+			model.rotation.y = 5.6;
+		} else {
+			model.rotation.y = 4.8;
+		}
+	} else if (keyboard.pressed("right")) {
+			if (keyboard.pressed("up")) {
+				model.rotation.y = 2.4;
+			} else if (keyboard.pressed("down")) {
+				model.rotation.y = 0.8;
+			} else {
+				model.rotation.y = 1.6;
+			}
+	} else if (keyboard.pressed("up")) {
+		model.rotation.y = 3.2;
+	} else if (keyboard.pressed("down")) {
+		model.rotation.y = 0;
+	}
+	
 }
