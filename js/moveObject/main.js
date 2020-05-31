@@ -4,13 +4,17 @@ import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/Or
 import fieldWireFrame from './fieldWireFrame.js';
 import THREEx from './THREEx.KeyboardState.js';
 import modelWireFrame from './modelWireFrame.js';
+import gold from './gold.js';
+import collect from './isCollection.js';
 
 var scene, camera, renderer;
 var loader;
 var ambientLight, light;
 var controls;
-var mixer, actions, clock;
+var mixer, actions;
 var collidableMeshList = fieldWireFrame();
+var goldList = gold();
+var collectableMeshList = [];
 var keyboard = new THREEx.KeyboardState();
 var model, modelWire = modelWireFrame();
 
@@ -25,25 +29,31 @@ function init() {
 	camera.position.set( 9.5, 5, 15 );
 	camera.lookAt( 9.5, 0.8, 10 );
 
-	clock = new THREE.Clock();
-
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setClearColor( 0x74b9ff );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
 	controls = new OrbitControls( camera, renderer.domElement );
+	controls.enableKeys = false;
 
 	ambientLight = new THREE.AmbientLight( 0x383434 );
 	scene.add( ambientLight );
 
-	light = new THREE.PointLight( 0xffffff, 1, 80 );
+	light = new THREE.PointLight( 0xffffff, 1, 80);
 	light.position.set( 0, 5, 5 );
 	scene.add( light );
 
 	for (var i = collidableMeshList.length - 1; i >= 0; i--) {
 		scene.add(collidableMeshList[i]);
 	}
+
+	for (var i = goldList.length - 1; i >= 0; i--) {
+		scene.add(goldList[i]);
+		collectableMeshList.push(goldList[i].children[0]);
+	}
+
+	console.log(goldList);
 
 	scene.add(modelWire);
 	
@@ -53,21 +63,20 @@ function init() {
 		var field = gltf.scene;		
 		scene.add( field );
 
-		var monsterLoader = new GLTFLoader();
-		monsterLoader.load('../../animations/littlemonster/scene.gltf', function ( gltf ) {
+	});
 
-			model = gltf.scene;
-			model.scale.set( 0.02, 0.02, 0.02 );
-			model.position.set(9.5, 0, 10);
-			model.rotation.y = 3.2;
-			scene.add( model );
+	loader.load('../../animations/littlemonster/scene.gltf', function ( gltf ) {
 
-			var animations = gltf.animations;
+		model = gltf.scene;
+		model.scale.set( 0.02, 0.02, 0.02 );
+		model.position.set(9.5, 0, 10);
+		model.rotation.y = 3.2;
+		scene.add( model );
 
-			mixer = new THREE.AnimationMixer( model );
-			actions = mixer.clipAction( animations[0] );
+		var animations = gltf.animations;
 
-		});
+		mixer = new THREE.AnimationMixer( model );
+		actions = mixer.clipAction( animations[0] );
 
 	});
 
@@ -77,7 +86,12 @@ function animate() {
 
 	requestAnimationFrame( animate );
 
-	var mixerUpdateDelta = clock.getDelta();
+	for (var i = goldList.length - 1; i >= 0; i--) {
+		goldList[i].rotation.y += 0.05;
+	}
+
+	var mixerUpdateDelta = 0.02;
+
 	if(mixer != undefined){
 		mixer.update( mixerUpdateDelta );
 		actions.play();
@@ -115,6 +129,7 @@ function update() {
 	}
 
 	rotate();
+	collect(modelWire, collectableMeshList, scene);
 
 	for (var vertexIndex = 0; vertexIndex < modelWire.geometry.vertices.length; vertexIndex++) {
 
