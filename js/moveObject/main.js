@@ -44,16 +44,17 @@ function init() {
 	light.position.set( 0, 5, 5 );
 	scene.add( light );
 
-	for (var i = collidableMeshList.length - 1; i >= 0; i--) {
-		scene.add(collidableMeshList[i]);
-	}
+	collidableMeshList.map(collidableMesh => {
+		scene.add(collidableMesh);
+	});
 
-	for (var i = goldList.length - 1; i >= 0; i--) {
-		scene.add(goldList[i]);
-		collectableMeshList.push(goldList[i].children[0]);
-	}
+	goldList.map(gold => {
+		scene.add(gold);
 
-	console.log(goldList);
+		var goldWire = gold.children[0];
+
+		collectableMeshList.push(goldWire);
+	});
 
 	scene.add(modelWire);
 	
@@ -86,9 +87,9 @@ function animate() {
 
 	requestAnimationFrame( animate );
 
-	for (var i = goldList.length - 1; i >= 0; i--) {
-		goldList[i].rotation.y += 0.05;
-	}
+	goldList.map(gold => {
+		gold.rotation.y += 0.05;
+	});
 
 	var mixerUpdateDelta = 0.02;
 
