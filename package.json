@@ -9,6 +9,6 @@
   "author": "Natanael Freire",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.116.0"
+    "three": "^0.137.0"
   }
 }
